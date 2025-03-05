@@ -1,0 +1,13 @@
+name: SimpleSurvivalGames
+version: '1.0-SNAPSHOT'
+main: jp.simplespace.matchan.simpleSurvivalGames.SimpleSurvivalGames
+api-version: '1.21'
+authors: [ Matchan ]
+description: バニラサバイバルを豊かにするプラグイン
+website: https://simplespace.jp
+bootstrapper: jp.simplespace.matchan.simpleSurvivalGames.SimpleSurvivalGamesBootstrap
+permissions:
+  ssg.command.game:
+    default: op
+  ssg.command.speedrun:
+    default: op
