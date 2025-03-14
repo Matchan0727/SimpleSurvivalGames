@@ -1,4 +1,4 @@
-package jp.simplespace.matchan.simpleSurvivalGames.simplehardcore
+package jp.simplespace.matchan.simpleSurvivalGames.hardcore
 
 import jp.simplespace.simplehardcore.HardcoreGame
 import net.kyori.adventure.text.Component
@@ -11,11 +11,14 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.*
-import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.bukkit.event.player.PlayerJoinEvent
-import java.util.*
 
 class HardcoreListener(val game: HardcoreGame) : Listener {
+
+    init {
+        updateBoards()
+    }
+
     @EventHandler
     fun onPlayerJoin(event: PlayerJoinEvent) {
         val player = event.player
@@ -28,7 +31,7 @@ class HardcoreListener(val game: HardcoreGame) : Listener {
 
     fun updateBoards() {
         for (player in Bukkit.getOnlinePlayers()) {
-            game.objective!!.getScore(player)
+            game.cntObj!!.getScore(player)
                 .setScore(game.config.getInt(player.uniqueId.toString()))
         }
     }
@@ -47,10 +50,8 @@ class HardcoreListener(val game: HardcoreGame) : Listener {
             game.saveConfig()
             return
         }
-        game.config.set(
-            "worldcount",
-            game.config.getInt("worldcount", 1) + 1
-        )
+        val cnt = game.config.getInt("worldcount", 1) + 1
+        game.config.set("worldcount", cnt)
         game.saveConfig()
         for (p in Bukkit.getOnlinePlayers()) {
             p.kick(
@@ -67,6 +68,8 @@ class HardcoreListener(val game: HardcoreGame) : Listener {
                     .append(Component.text(game.scheduler!!.timer))
             )
         }
+        game.unload()
+        game.renameWorld("world_$cnt")
         Bukkit.getServer().shutdown()
     }
 
@@ -109,34 +112,8 @@ class HardcoreListener(val game: HardcoreGame) : Listener {
     fun onEntitySpawn(event: EntitySpawnEvent) {
         val entity = event.entity
         when (entity.type) {
-            EntityType.WOLF -> entity.customName(Component.text("笹倉千代子").color(TextColor.color(18,166,8)))
+            EntityType.WOLF -> entity.customName(Component.text("sasadog").color(TextColor.color(18,166,8)))
             else -> {}
-        }
-    }
-
-    fun onPlayerInteract(event: PlayerInteractEntityEvent) {
-        if (event.rightClicked !is Player) return
-        var target = event.rightClicked as Player
-        //sasagusa以外だったらreturn
-        if (target.getUniqueId() != UUID.fromString("df710bee-1179-4433-b892-cd9ce7d27eda")) return
-        when (Random().nextInt(8)) {
-            1 -> target.chat("ここはどこだ！")
-            2 -> target.chat("チ◯コ生えてるチ◯コマンだ！")
-            3 -> target.chat("まりおっ◯い")
-            4 -> target.chat("ワンワンワンワン")
-            5 -> target.chat("シコシコシコシコシコランド！")
-            6 -> target.chat("出してねえやつは笑うな！")
-            7 -> target.chat("過酷なオ◯ニーして精◯出してんのか！")
-            else -> {
-                target.chat("全く前が見えない！")
-                target.chat("ここはどこだ！")
-                target.chat("チ◯コ生えてるチ◯コマンだ！")
-                target.chat("まりおっ◯い")
-                target.chat("ワンワンワンワン")
-                target.chat("シコシコシコシコシコランド！")
-                target.chat("出してねえやつは笑うな！")
-                target.chat("過酷なオ◯ニーして精◯出してんのか！")
-            }
         }
     }
 }

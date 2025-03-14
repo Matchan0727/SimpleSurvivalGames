@@ -1,4 +1,4 @@
-package jp.simplespace.matchan.simpleSurvivalGames.simplespeedrunner
+package jp.simplespace.matchan.simpleSurvivalGames.speedrun
 
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor

@@ -7,7 +7,8 @@ import org.bukkit.ChatColor
 import org.bukkit.NamespacedKey
 import org.bukkit.persistence.PersistentDataType
 
-class HardcoreScheduler : Runnable {
+class HardcoreScheduler(val game: HardcoreGame) : Runnable {
+
     var count = 0
     private var sec = 0
     private var min = 0
@@ -19,12 +20,12 @@ class HardcoreScheduler : Runnable {
         if (Bukkit.getWorld("world") != null) {
             val container = Bukkit.getWorld("world")!!.persistentDataContainer
             if (container.get<Int, Int>(
-                    NamespacedKey(HardcoreGame.Companion.plugin!!, "count"),
+                    NamespacedKey(game.KEY, "count"),
                     PersistentDataType.INTEGER
                 ) != null
             ) {
                 count = container.get<Int, Int>(
-                    NamespacedKey(HardcoreGame.Companion.plugin!!, "count"),
+                    NamespacedKey(game.KEY, "count"),
                     PersistentDataType.INTEGER
                 )!!
             }
@@ -39,7 +40,7 @@ class HardcoreScheduler : Runnable {
             player.spigot().sendMessage(
                 ChatMessageType.ACTION_BAR,
                 TextComponent(
-                    ChatColor.GOLD.toString() + (HardcoreGame.Companion.config!!.getInt("worldcount", 1)
+                    ChatColor.GOLD.toString() + (game.config.getInt("worldcount", 1)
                         .toString() + "代目ワールドの経過時間: " + timer)
                 )
             )

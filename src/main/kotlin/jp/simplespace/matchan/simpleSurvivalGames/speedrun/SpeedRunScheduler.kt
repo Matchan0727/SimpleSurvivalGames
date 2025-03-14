@@ -1,4 +1,4 @@
-package jp.simplespace.matchan.simpleSurvivalGames.simplespeedrunner
+package jp.simplespace.matchan.simpleSurvivalGames.speedrun
 
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent

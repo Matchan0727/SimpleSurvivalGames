@@ -1,4 +1,4 @@
-package jp.simplespace.matchan.simpleSurvivalGames.simplespeedrunner
+package jp.simplespace.matchan.simpleSurvivalGames.speedrun
 
 import jp.simplespace.matchan.simpleSurvivalGames.IGame
 import jp.simplespace.matchan.simpleSurvivalGames.Utils
@@ -45,10 +45,6 @@ class SpeedRunGame(val plugin: Plugin) : IGame{
 
     fun setRunner(player: Player) {
         runner = player.uniqueId
-    }
-
-    fun getRunner(): UUID? {
-        return runner
     }
 
     fun ready(): Boolean {
@@ -99,6 +95,7 @@ class SpeedRunGame(val plugin: Plugin) : IGame{
         for (player in Bukkit.getOnlinePlayers()) {
             player.compassTarget = nowCompassLocation!!
             val inventory: PlayerInventory = player.getInventory()
+            // TODO アイテムにタグを付けてそれのアイテムだけ更新する？
             for (i in 0..45) {
                 val item: ItemStack = inventory.getItem(i) ?: continue
                 if (item.getType() == Material.COMPASS) {
