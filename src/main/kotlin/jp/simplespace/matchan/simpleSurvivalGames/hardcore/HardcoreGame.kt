@@ -38,7 +38,6 @@ class HardcoreGame(val plugin: SimpleSurvivalGames) : IGame {
 
     override fun init(): Boolean {
         reset = false
-        setAutoSave(true)
         val server = plugin.server
         sb = server.scoreboardManager.mainScoreboard
         if (sb!!.getObjective("DeathCount") === null) {
@@ -52,9 +51,6 @@ class HardcoreGame(val plugin: SimpleSurvivalGames) : IGame {
         hpobj!!.displaySlot = DisplaySlot.PLAYER_LIST
         scheduler = HardcoreScheduler(this)
         taskId = plugin.getServer().scheduler.scheduleSyncRepeatingTask(plugin, scheduler!!, 0L, 20L)
-        if (server.getWorld("world") == null) {
-            plugin.logger.warning("このプラグインを正常に機能させるためにワールドの名前は「world」にしてください。")
-        }
         listener = HardcoreListener(this)
         server.pluginManager.registerEvents(listener!!, plugin)
         return true
@@ -77,10 +73,8 @@ class HardcoreGame(val plugin: SimpleSurvivalGames) : IGame {
                 )
             }
         )
-        if (Bukkit.getWorld("world") != null) {
-            val container = Bukkit.getWorld("world")!!.persistentDataContainer
-            scheduler?.count?.let { container.set(NamespacedKey(KEY, "count"), PersistentDataType.INTEGER, it) }
-        }
+        val container = Bukkit.getWorlds().filter{it.environment == org.bukkit.World.Environment.NORMAL}.first().persistentDataContainer
+        scheduler?.count?.let { container.set(NamespacedKey(KEY, "count"), PersistentDataType.INTEGER, it) }
         plugin.server.scheduler.cancelTask(taskId)
         HandlerList.unregisterAll(listener!!)
         return true
@@ -90,14 +84,8 @@ class HardcoreGame(val plugin: SimpleSurvivalGames) : IGame {
         return true
     }
 
-    fun setAutoSave(boo: Boolean) {
-        Bukkit.getWorld("world")!!.isAutoSave = boo
-        Bukkit.getWorld("world_nether")!!.isAutoSave = boo
-        Bukkit.getWorld("world_the_end")!!.isAutoSave = boo
-    }
-
     fun renameWorld(newWorldName: String) {
-        val serverProperties = this.plugin.dataFolder.parentFile.parentFile.resolve("server.properties")
+        val serverProperties = File("server.properties")
 
         try {
             val lines = serverProperties.readLines().toMutableList()
