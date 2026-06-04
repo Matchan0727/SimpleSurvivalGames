@@ -17,7 +17,7 @@ import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
-class SimpleSurvivalCommands {
+class   SimpleSurvivalCommands {
     companion object {
         fun game(): LiteralCommandNode<CommandSourceStack> {
             fun select(ctx: CommandContext<CommandSourceStack>, type: GameSelector.GameType): Int {
@@ -165,30 +165,32 @@ class SimpleSurvivalCommands {
                 )
                 .then(
                     Commands.literal("setcompassannounce")
-                        .then(Commands.argument("bool", BoolArgumentType.bool()))
-                        .executes { ctx ->
-                            if (!check(ctx)) return@executes Command.SINGLE_SUCCESS
-                            val game = game()
-                            val config = game.config
-                            val boo = BoolArgumentType.getBool(ctx, "bool")
-                            config["compassAnnounce"] = boo
-                            game.saveConfig()
-                            Bukkit.broadcastMessage(ChatColor.GOLD.toString() + "コンパス更新の通知を" + boo + "に設定しました。")
-                            Command.SINGLE_SUCCESS
-                        })
+                        .then(Commands.argument("bool", BoolArgumentType.bool())
+                            .executes { ctx ->
+                                if (!check(ctx)) return@executes Command.SINGLE_SUCCESS
+                                val game = game()
+                                val config = game.config
+                                val boo = BoolArgumentType.getBool(ctx, "bool")
+                                config["compassAnnounce"] = boo
+                                game.saveConfig()
+                                Bukkit.broadcastMessage(ChatColor.GOLD.toString() + "コンパス更新の通知を" + boo + "に設定しました。")
+                                Command.SINGLE_SUCCESS
+                            }
+                        )
+                        )
                 .then(
                     Commands.literal("setmaxdeath")
-                        .then(Commands.argument("count", IntegerArgumentType.integer()))
-                        .executes { ctx ->
-                            if (!check(ctx)) return@executes Command.SINGLE_SUCCESS
-                            val game = game()
-                            val config = game.config
-                            val count = IntegerArgumentType.getInteger(ctx, "count")
-                            config["maxDeath"] = count
-                            game.saveConfig()
-                            Bukkit.broadcastMessage(ChatColor.GOLD.toString() + "ランナーの最大死亡可能回数を" + count + "回に設定しました。")
-                            Command.SINGLE_SUCCESS
-                        }
+                        .then(Commands.argument("count", IntegerArgumentType.integer())
+                            .executes { ctx ->
+                                if (!check(ctx)) return@executes Command.SINGLE_SUCCESS
+                                val game = game()
+                                val config = game.config
+                                val count = IntegerArgumentType.getInteger(ctx, "count")
+                                config["maxDeath"] = count
+                                game.saveConfig()
+                                Bukkit.broadcastMessage(ChatColor.GOLD.toString() + "ランナーの最大死亡可能回数を" + count + "回に設定しました。")
+                                Command.SINGLE_SUCCESS
+                            })
                 )
                 .then(
                     Commands.literal("pause")
