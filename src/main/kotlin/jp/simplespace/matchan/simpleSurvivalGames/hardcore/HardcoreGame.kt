@@ -29,6 +29,7 @@ class HardcoreGame(val plugin: SimpleSurvivalGames) : IGame {
     var scheduler: HardcoreScheduler? = null
     var cntObj: Objective? = null
     var hpobj: Objective? = null
+    var hpbelowobj: Objective? = null
     var taskId = 0
     var listener: HardcoreListener? = null
 
@@ -44,11 +45,19 @@ class HardcoreGame(val plugin: SimpleSurvivalGames) : IGame {
             cntObj = sb!!.registerNewObjective("DeathCount", Criteria.DUMMY, Component.text("死亡回数"))
         } else cntObj = sb!!.getObjective("DeathCount")
         cntObj!!.displaySlot = DisplaySlot.SIDEBAR
+
+        // タブに表示するHP
         if (sb!!.getObjective("HP") === null) {
             hpobj = sb!!.registerNewObjective("HP", Criteria.HEALTH, MiniMessage.miniMessage().deserialize("<red>HP"))
         } else hpobj = sb!!.getObjective("HP")
-        hpobj!!.displaySlot = DisplaySlot.BELOW_NAME
         hpobj!!.displaySlot = DisplaySlot.PLAYER_LIST
+
+        // プレイヤー名の上に表示するHP
+        if (sb!!.getObjective("HPBelow") === null) {
+            hpbelowobj = sb!!.registerNewObjective("HPBelow", Criteria.HEALTH, MiniMessage.miniMessage().deserialize("<bold><red>❤"))
+        } else hpbelowobj = sb!!.getObjective("HPBelow")
+        hpbelowobj!!.displaySlot = DisplaySlot.BELOW_NAME
+
         scheduler = HardcoreScheduler(this)
         taskId = plugin.getServer().scheduler.scheduleSyncRepeatingTask(plugin, scheduler!!, 0L, 20L)
         listener = HardcoreListener(this)
